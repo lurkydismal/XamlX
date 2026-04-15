@@ -27,7 +27,7 @@ namespace XamlX.TypeSystem
             public IReadOnlyList<IXamlCustomAttribute> CustomAttributes =>
                 _attributes ?? (_attributes =
                     Assembly.CustomAttributes.Select(ca => new CecilCustomAttribute(TypeSystem, ca)).ToList());
-            
+
             public IXamlType FindType(string fullName)
             {
                 if (_typeCache.TryGetValue(fullName, out var rv))

@@ -28,7 +28,7 @@ namespace XamlX.IL
             : base(configuration, emitMappings, fillWithDefaults)
         {
             if (fillWithDefaults)
-            {                
+            {
                 Emitters.AddRange(new object[]
                 {
                     new NewObjectEmitter(),
@@ -75,7 +75,7 @@ namespace XamlX.IL
                 file, Emitters);
             return emitContext;
         }
-        
+
         protected override void CompileBuild(
             IFileSource fileSource,
             IXamlAstValueNode rootInstance, Func<string, IXamlType, IXamlTypeBuilder<IXamlILEmitter>> createSubType,
@@ -161,7 +161,7 @@ namespace XamlX.IL
         public static XamlILNodeEmitResult Type(int consumedItems, IXamlType type) =>
             new XamlILNodeEmitResult(consumedItems, type);
     }
-    
+
 #if !XAMLX_INTERNAL
     public
 #endif
@@ -175,5 +175,5 @@ namespace XamlX.IL
     interface IXamlAstILEmitableNode : IXamlAstEmitableNode<IXamlILEmitter, XamlILNodeEmitResult>
     {
     }
-    
+
 }

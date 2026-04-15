@@ -10,7 +10,7 @@ namespace XamlX.Ast
     interface IXamlLineInfo
     {
         int Line { get; set; }
-        int Position { get; set; }   
+        int Position { get; set; }
     }
 
 #if !XAMLX_INTERNAL
@@ -22,7 +22,7 @@ namespace XamlX.Ast
         void Push(IXamlAstNode node);
         void Pop();
     }
-    
+
 #if !XAMLX_INTERNAL
     public
 #endif
@@ -31,7 +31,7 @@ namespace XamlX.Ast
         void VisitChildren(Visitor visitor);
         IXamlAstNode Visit(Visitor visitor);
     }
-    
+
 #if !XAMLX_INTERNAL
     public
 #endif
@@ -45,12 +45,12 @@ namespace XamlX.Ast
             Line = lineInfo.Line;
             Position = lineInfo.Position;
         }
-        
+
         public virtual void VisitChildren(Visitor visitor)
         {
-            
+
         }
-        
+
         public IXamlAstNode Visit(Visitor visitor)
         {
             var node = visitor.Visit(this);
@@ -71,7 +71,7 @@ namespace XamlX.Ast
         {
             for (var c = 0; c < list.Count; c++)
             {
-                list[c] = (T) list[c].Visit(visitor);
+                list[c] = (T)list[c].Visit(visitor);
             }
         }
     }
@@ -81,7 +81,7 @@ namespace XamlX.Ast
 #endif
     interface IXamlAstManipulationNode : IXamlAstNode
     {
-        
+
     }
 
 #if !XAMLX_INTERNAL
@@ -97,9 +97,9 @@ namespace XamlX.Ast
 #endif
     interface IXamlAstImperativeNode : IXamlAstNode
     {
-        
+
     }
-    
+
 #if !XAMLX_INTERNAL
     public
 #endif
@@ -107,8 +107,8 @@ namespace XamlX.Ast
     {
         IXamlAstTypeReference Type { get; }
     }
-    
-    
+
+
 #if !XAMLX_INTERNAL
     public
 #endif
@@ -117,16 +117,16 @@ namespace XamlX.Ast
         bool IsMarkupExtension { get; }
         bool Equals(IXamlAstTypeReference other);
     }
-    
-    
+
+
 #if !XAMLX_INTERNAL
     public
 #endif
     interface IXamlAstPropertyReference : IXamlAstNode
     {
-        
+
     }
-    
+
 #if !XAMLX_INTERNAL
     public
 #endif
@@ -138,14 +138,14 @@ namespace XamlX.Ast
                 return clr.Type;
             throw new XamlParseException($"Unable to convert {r} to CLR type", r);
         }
-        
+
         public static XamlAstClrTypeReference GetClrTypeReference(this IXamlAstTypeReference r)
         {
             if (r is XamlAstClrTypeReference clr)
                 return clr;
             throw new XamlParseException($"Unable to convert {r} to CLR type", r);
         }
-        
+
         public static XamlAstClrProperty GetClrProperty(this IXamlAstPropertyReference r)
         {
             if (r is XamlAstClrProperty clr)

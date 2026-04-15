@@ -16,13 +16,13 @@ namespace XamlX.Transform.Transformers
         {
             if (node is XamlAstClrProperty prop && prop.Getter != null)
             {
-                foreach(var adder in XamlTransformHelpers.FindPossibleAdders(context, prop.Getter.ReturnType))
+                foreach (var adder in XamlTransformHelpers.FindPossibleAdders(context, prop.Getter.ReturnType))
                     prop.Setters.Add(new AdderSetter(prop.Getter, adder));
             }
 
             return node;
         }
-        
+
         class AdderSetter : IXamlPropertySetter, IXamlEmitablePropertySetter<IXamlILEmitter>
         {
             private readonly IXamlMethod _getter;
@@ -42,7 +42,7 @@ namespace XamlX.Transform.Transformers
             {
                 AllowMultiple = true
             };
-            
+
             public IReadOnlyList<IXamlType> Parameters { get; }
             public void Emit(IXamlILEmitter emitter)
             {
@@ -56,7 +56,7 @@ namespace XamlX.Transform.Transformers
                 }
 
                 emitter.EmitCall(_getter);
-                while (locals.Count>0)
+                while (locals.Count > 0)
                     using (var loc = locals.Pop())
                         emitter.Ldloc(loc.Local);
                 emitter.EmitCall(_adder, true);

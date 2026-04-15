@@ -15,7 +15,7 @@ namespace XamlX.Transform.Transformers
             public Dictionary<(string, string, bool), IXamlType> CacheDictionary =
                 new Dictionary<(string, string, bool), IXamlType>();
         }
-        
+
         public static XamlAstClrTypeReference ResolveType(AstTransformationContext context,
             string xmlns, string name, bool isMarkupExtension, List<XamlAstXmlTypeReference> typeArguments,
             IXamlLineInfo lineInfo,
@@ -52,7 +52,7 @@ namespace XamlX.Transform.Transformers
                     ResolveType(context, ta.XmlNamespace, ta.Name, false, ta.GenericArguments, lineInfo, strict)
                         ?.Type)
                 .ToList();
-            
+
             IXamlType Attempt(Func<string, IXamlType> cb, string xname)
             {
                 var suffix = (typeArguments.Count != 0) ? ("`" + typeArguments.Count) : "";
@@ -61,9 +61,9 @@ namespace XamlX.Transform.Transformers
                 else
                     return cb(xname + suffix) ?? cb(xname + "Extension" + suffix);
             }
-            
+
             IXamlType found = null;
-            
+
             // Try to resolve from system
             if (xmlns == XamlNamespaces.Xaml2006)
                 found = context.Configuration.TypeSystem.FindType("System." + name);
@@ -104,7 +104,7 @@ namespace XamlX.Transform.Transformers
                 found = found?.MakeGenericType(targs);
             if (found != null)
                 return new XamlAstClrTypeReference(lineInfo, found,
-                    isMarkupExtension || found.Name.EndsWith("Extension")); 
+                    isMarkupExtension || found.Name.EndsWith("Extension"));
             if (strict)
                 throw new XamlParseException(
                     $"Unable to resolve type {name} from namespace {xmlns}", lineInfo);
@@ -115,7 +115,7 @@ namespace XamlX.Transform.Transformers
             string xmlName, bool isMarkupExtension, IXamlLineInfo lineInfo,
             bool strict)
         {
-            var pair = xmlName.Split(new[] {':'}, 2);
+            var pair = xmlName.Split(new[] { ':' }, 2);
             var (shortNs, name) = pair.Length == 1 ? ("", pair[0]) : (pair[0], pair[1]);
             if (!context.NamespaceAliases.TryGetValue(shortNs, out var xmlns))
             {

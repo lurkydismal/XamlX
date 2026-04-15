@@ -11,7 +11,7 @@ namespace XamlX.TypeSystem
     {
         // TODO: Make generic type definitions have Reference set to GenericTypeInstance with parameters for
         // consistency with CecilTypeBuilder
-        
+
         [DebuggerDisplay("{" + nameof(Reference) + "}")]
         class CecilType : IXamlType, ITypeReference
         {
@@ -24,9 +24,9 @@ namespace XamlX.TypeSystem
             public CecilType(CecilTypeSystem typeSystem, CecilAssembly assembly, TypeDefinition definition)
                 : this(typeSystem, assembly, definition, definition)
             {
-                
+
             }
-            
+
             public CecilType(CecilTypeSystem typeSystem, CecilAssembly assembly, TypeDefinition definition,
                 TypeReference reference)
             {
@@ -77,7 +77,7 @@ namespace XamlX.TypeSystem
             public IReadOnlyList<IXamlProperty> Properties =>
                 _properties ?? (_properties =
                     Definition.Properties.Select(p => new CecilProperty(TypeSystem, p, Reference)).ToList());
-            
+
             protected IReadOnlyList<IXamlEventInfo> _events;
 
             public IReadOnlyList<IXamlEventInfo> Events =>
@@ -97,7 +97,7 @@ namespace XamlX.TypeSystem
                 _genericParameters ?? (_genericParameters = Reference is TypeDefinition td && td.HasGenericParameters
                     ? td.GenericParameters.Select(gp => TypeSystem.Resolve(gp)).ToList()
                     : null);
-            
+
 
             protected IReadOnlyList<IXamlCustomAttribute> _attributes;
             public IReadOnlyList<IXamlCustomAttribute> CustomAttributes =>
@@ -115,8 +115,8 @@ namespace XamlX.TypeSystem
                 if (!type.IsValueType
                     && type == XamlPseudoType.Null)
                     return true;
-                
-                if (type.IsValueType 
+
+                if (type.IsValueType
                     && GenericTypeDefinition?.FullName == "System.Nullable`1"
                     && GenericArguments[0].Equals(type))
                     return true;
@@ -168,7 +168,7 @@ namespace XamlX.TypeSystem
                 ? null
                 : _baseType ?? (_baseType = TypeSystem.Resolve(
                       Definition.BaseType.TransformGeneric(Reference)));
-            
+
             public bool IsValueType => Definition.IsValueType;
             public bool IsEnum => Definition.IsEnum;
             protected IReadOnlyList<IXamlType> _interfaces;
@@ -177,7 +177,7 @@ namespace XamlX.TypeSystem
                 _interfaces ?? (_interfaces =
                     Definition.Interfaces.Select(i => TypeSystem.Resolve(i.InterfaceType
                         .TransformGeneric(Reference))).ToList());
-            
+
             public bool IsInterface => Definition.IsInterface;
             public IXamlType GetEnumUnderlyingType()
             {
@@ -185,8 +185,8 @@ namespace XamlX.TypeSystem
                     return null;
                 return TypeSystem.Resolve(Definition.GetEnumUnderlyingType());
             }
-            
-            
+
+
         }
     }
 }

@@ -19,7 +19,7 @@ namespace XamlX.Transform.Transformers
                 || !(nonDirectiveChildren[0] is IXamlAstValueNode vn)
                 || !vn.Type.GetClrType().Equals(context.Configuration.WellKnownTypes.String))
                 return node;
-            
+
             if (XamlTransformHelpers.TryGetCorrectlyTypedValue(context, vn, on.Type.GetClrType(), out var rv))
             {
                 if (nonDirectiveChildren.Count != on.Children.Count)
@@ -31,7 +31,7 @@ namespace XamlX.Transform.Transformers
             if (on.Type.GetClrType().IsValueType)
                 throw new XamlLoadException(
                     $"Unable to convert value {(vn as XamlAstTextNode)?.Text}) to {on.Type.GetClrType()}", vn);
-            
+
             // Parser not found, isn't a value type, probably a regular object creation node with text content
             return node;
         }

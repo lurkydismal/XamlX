@@ -15,7 +15,7 @@ namespace XamlX.Parsers.SystemXamlMarkupExtensionParser
             _lineInfo = lineInfo;
             CurrentType = new MeScannerTypeName(new XamlAstXmlTypeReference(lineInfo, "invalid", "invalid"));
         }
-        
+
         public MeScannerBracketModeParseParameters CurrentBracketModeParseParameters { get; }
             = new MeScannerBracketModeParseParameters();
 
@@ -39,7 +39,7 @@ namespace XamlX.Parsers.SystemXamlMarkupExtensionParser
 
         }
     }
-    
+
     class MeScannerTypeName
     {
         public XamlAstXmlTypeReference TypeReference { get; }
@@ -48,7 +48,7 @@ namespace XamlX.Parsers.SystemXamlMarkupExtensionParser
         {
             TypeReference = typeReference;
         }
-        
+
         public static MeScannerTypeName ParseInternal(string longName, MeScannerContext context, out string error)
         {
             error = null;
@@ -80,15 +80,15 @@ namespace XamlX.Parsers.SystemXamlMarkupExtensionParser
     {
         public MeScannerParseException(MeScanner meScanner, string error) : base(error)
         {
-            
+
         }
 
         public MeScannerParseException(string error) : base(error)
         {
-            
+
         }
     }
-    
+
     class MeScannerBracketModeParseParameters
     {
         public bool IsConstructorParsingMode { get; set; } = true;

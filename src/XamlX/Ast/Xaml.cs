@@ -40,9 +40,9 @@ namespace XamlX.Ast
             IXamlAstPropertyReference property, IXamlAstValueNode value) : base(lineInfo)
         {
             Property = property;
-            Values = new List<IXamlAstValueNode> {value};
+            Values = new List<IXamlAstValueNode> { value };
         }
-        
+
         public XamlAstXamlPropertyValueNode(IXamlLineInfo lineInfo,
             IXamlAstPropertyReference property, IEnumerable<IXamlAstValueNode> values) : base(lineInfo)
         {
@@ -52,7 +52,7 @@ namespace XamlX.Ast
 
         public override void VisitChildren(Visitor visitor)
         {
-            Property = (IXamlAstPropertyReference) Property.Visit(visitor);
+            Property = (IXamlAstPropertyReference)Property.Visit(visitor);
             VisitList(Values, visitor);
         }
     }
@@ -73,13 +73,13 @@ namespace XamlX.Ast
 
         public override void VisitChildren(Visitor visitor)
         {
-            Type = (IXamlAstTypeReference) Type.Visit(visitor);
+            Type = (IXamlAstTypeReference)Type.Visit(visitor);
             VisitList(Arguments, visitor);
             VisitList(Children, visitor);
         }
     }
-    
-    
+
+
 
 #if !XAMLX_INTERNAL
     public
@@ -99,12 +99,12 @@ namespace XamlX.Ast
 
         public override void VisitChildren(Visitor visitor)
         {
-            Type = (IXamlAstTypeReference) Type.Visit(visitor);
+            Type = (IXamlAstTypeReference)Type.Visit(visitor);
         }
 
         public IXamlAstTypeReference Type { get; set; }
     }
-    
+
 #if !XAMLX_INTERNAL
     public
 #endif
@@ -124,8 +124,8 @@ namespace XamlX.Ast
 
         public override void VisitChildren(Visitor visitor)
         {
-            DeclaringType = (IXamlAstTypeReference) DeclaringType.Visit(visitor);
-            TargetType = (IXamlAstTypeReference) TargetType.Visit(visitor);
+            DeclaringType = (IXamlAstTypeReference)DeclaringType.Visit(visitor);
+            TargetType = (IXamlAstTypeReference)TargetType.Visit(visitor);
         }
     }
 }

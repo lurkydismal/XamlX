@@ -16,26 +16,26 @@ namespace XamlX.TypeSystem
         public static int ConvertLiteralToInt(object literal)
         {
             if (literal is uint ui)
-                return unchecked((int) ui);
-            return (int) Convert.ChangeType(literal, typeof(int));
+                return unchecked((int)ui);
+            return (int)Convert.ChangeType(literal, typeof(int));
         }
-        
+
         public static long ConvertLiteralToLong(object literal)
         {
             if (literal is ulong ui)
-                return unchecked((long) ui);
-            return (long) Convert.ChangeType(literal, typeof(long));
+                return unchecked((long)ui);
+            return (long)Convert.ChangeType(literal, typeof(long));
         }
 
         public static XamlConstantNode GetLiteralFieldConstantNode(IXamlField field, IXamlLineInfo info)
             => new XamlConstantNode(info, field.FieldType, GetLiteralFieldConstantValue(field));
-        
+
         public static object GetLiteralFieldConstantValue(IXamlField field)
         {
             var value = field.GetLiteralValue();
-            
+
             //This code is needed for SRE backend that returns an actual enum instead of just int
-            if (value.GetType().IsEnum) 
+            if (value.GetType().IsEnum)
                 value = Convert.ChangeType(value, value.GetType().GetEnumUnderlyingType());
 
             return value;
@@ -54,7 +54,7 @@ namespace XamlX.TypeSystem
             rv = null;
             return false;
         }
-        
+
         public static bool TryGetEnumValue(IXamlType enumType, string value, out object rv)
         {
             rv = null;
@@ -66,7 +66,7 @@ namespace XamlX.TypeSystem
                     (object)parsedLong;
                 return true;
             }
-            
+
             var values = enumType.CustomAttributes.Any(a => a.Type.Name == "FlagsAttribute") ?
                 value.Split(',').Select(x => x.Trim()).ToArray() :
                 new[] { value };

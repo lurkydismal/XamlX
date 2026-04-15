@@ -15,7 +15,7 @@ namespace XamlX.Transform
     {
         class AdderCache : Dictionary<IXamlType, IReadOnlyList<IXamlMethod>>
         {
-            
+
         }
 
         public static IReadOnlyList<IXamlMethod> FindPossibleAdders(AstTransformationContext context,
@@ -51,21 +51,21 @@ namespace XamlX.Transform
                         rv.Add(m);
                     }
                 }
-                
+
                 // First use methods from the type itself, then from base types, then from interfaces
                 rv = rv
                     .OrderByDescending(x => x.ThisOrFirstParameter().Equals(actualType))
                     .ThenBy(x => x.ThisOrFirstParameter().IsInterface)
                     .ToList();
-                
+
                 // Add casts
                 for (var c = 0; c < rv.Count; c++)
                     if (!rv[c].ThisOrFirstParameter().Equals(type))
-                        rv[c] = new XamlMethodWithCasts(rv[c], new[] {type}.Concat(rv[c].Parameters));
+                        rv[c] = new XamlMethodWithCasts(rv[c], new[] { type }.Concat(rv[c].Parameters));
 
                 return rv;
             }
-            
+
             var cache = context.GetOrCreateItem<AdderCache>();
             if (cache.TryGetValue(type, out var rvr))
                 return rvr;
@@ -124,7 +124,7 @@ namespace XamlX.Transform
                     throw new XamlParseException(
                         $"{node.Type.GetClrType().GetFqn()} was resolved as markup extension, but doesn't have a matching ProvideValue/ProvideTypedValue method",
                         node.Type);
-                
+
                 return false;
             }
             o = new XamlMarkupExtensionNode(node, provideValue, node);
@@ -152,7 +152,7 @@ namespace XamlX.Transform
                 var arg = attribute.Parameters.FirstOrDefault();
                 return (arg as IXamlType) ??
                                     (arg is String sarg ? cfg.TypeSystem.FindType(sarg) : null);
-                
+
             }
 
             return null;
@@ -162,19 +162,19 @@ namespace XamlX.Transform
         public static bool TryConvertValue(AstTransformationContext context,
                 IXamlAstValueNode node, IXamlType type, XamlAstClrProperty propertyContext,
                 out IXamlAstValueNode rv)
-        {    
+        {
             rv = null;
             var cfg = context.Configuration;
             // Since we are doing a conversion anyway, it makes sense to check for the underlying nullable type
-            if (type.GenericTypeDefinition?.Equals(cfg.WellKnownTypes.NullableT) == true) 
+            if (type.GenericTypeDefinition?.Equals(cfg.WellKnownTypes.NullableT) == true)
                 type = type.GenericArguments[0];
-            
-            
+
+
             if (cfg.CustomValueConverter?.Invoke(context, node, type, out rv) == true)
                 return true;
 
             var nodeType = node.Type.GetClrType();
-            
+
             // Implicit type converters
             if (!nodeType.Equals(cfg.WellKnownTypes.String))
                 return false;
@@ -208,7 +208,7 @@ namespace XamlX.Transform
                 {
                     var invoke = type.FindMethod(m => m.Name == "Invoke");
                     var rootType = context.RootObject.Type.GetClrType();
-                    var handler = 
+                    var handler =
                         rootType.FindMethod(tn.Text, invoke.ReturnType, false, invoke.Parameters.ToArray());
                     if (handler != null)
                     {
@@ -239,7 +239,7 @@ namespace XamlX.Transform
                          ?? candidates.FirstOrDefault(m => m.Parameters.Count == 1);
             if (parser != null)
             {
-                var args = new List<IXamlAstValueNode> {node};
+                var args = new List<IXamlAstValueNode> { node };
                 if (parser.Parameters.Count == 2)
                     args.Add(CreateInvariantCulture());
 
@@ -257,7 +257,7 @@ namespace XamlX.Transform
                     if (typeConverterAttribute != null)
                         converterType = TryGetTypeConverterFromCustomAttribute(cfg, typeConverterAttribute);
                 }
-                
+
                 if (converterType != null)
                 {
                     var converterMethod = converterType.FindMethod("ConvertFrom", cfg.WellKnownTypes.Object, false,

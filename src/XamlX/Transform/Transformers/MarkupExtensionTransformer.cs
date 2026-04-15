@@ -14,7 +14,7 @@ namespace XamlX.Transform.Transformers
             {
                 if (context.ParentNodes().FirstOrDefault() is XamlMarkupExtensionNode)
                     return node;
-                
+
                 if (XamlTransformHelpers.TryConvertMarkupExtension(context, vn, out var rv))
                     return rv;
             }

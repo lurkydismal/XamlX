@@ -56,13 +56,13 @@ namespace XamlX.TypeSystem
                 Definition = method.Resolve();
                 _declaringTypeReference = declaringType;
             }
-            
+
             public string Name => Reference.Name;
             public bool IsPublic => Definition.IsPublic;
             public bool IsStatic => Definition.IsStatic;
 
             private IXamlType _returnType;
-            
+
             public IXamlType ReturnType =>
                 _returnType ?? (_returnType = TypeSystem.Resolve(Reference.ReturnType));
 
@@ -76,7 +76,7 @@ namespace XamlX.TypeSystem
             public IReadOnlyList<IXamlType> Parameters =>
                 _parameters ?? (_parameters =
                     Reference.Parameters.Select(p => TypeSystem.Resolve(p.ParameterType)).ToList());
-            
+
             private IReadOnlyList<IXamlCustomAttribute> _attributes;
             public IReadOnlyList<IXamlCustomAttribute> CustomAttributes =>
                 _attributes ?? (_attributes =
@@ -114,7 +114,7 @@ namespace XamlX.TypeSystem
                 return new CecilMethod(TypeSystem, instantiation, _declaringTypeReference);
             }
         }
-        
+
         [DebuggerDisplay("{" + nameof(Reference) + "}")]
         class CecilConstructor : CecilMethodBase, IXamlConstructorBuilder<IXamlILEmitter>
         {

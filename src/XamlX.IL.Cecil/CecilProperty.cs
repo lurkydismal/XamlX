@@ -31,7 +31,7 @@ namespace XamlX.TypeSystem
             public IXamlMethod Setter => Property.SetMethod == null
                 ? null
                 : _setter ?? (_setter = TypeSystem.Resolve(Property.SetMethod, _declaringType));
-            
+
             private IXamlMethod _getter;
 
             public IXamlMethod Getter => Property.GetMethod == null

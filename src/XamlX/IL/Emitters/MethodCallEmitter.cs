@@ -28,7 +28,7 @@ namespace XamlX.IL.Emitters
             }
 
             context.Emit(mc.Method, codeGen, expectsVoid);
-            
+
             var isVoid = mc.Method.ReturnType.Equals(context.Configuration.WellKnownTypes.Void);
             if (!expectsVoid && isVoid)
                 throw new XamlLoadException(

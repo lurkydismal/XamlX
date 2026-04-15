@@ -11,7 +11,7 @@ namespace XamlX.Transform
 #endif
     class AstTransformationContext : XamlContextBase
     {
-        public Dictionary<string, string> NamespaceAliases { get; set; } = new Dictionary<string, string>();      
+        public Dictionary<string, string> NamespaceAliases { get; set; } = new Dictionary<string, string>();
         public TransformerConfiguration Configuration { get; }
         public IXamlAstValueNode RootObject { get; set; }
         public bool StrictMode { get; }
@@ -25,7 +25,7 @@ namespace XamlX.Transform
 
         public IXamlAstNode ParseError(string message, IXamlAstNode node) =>
             Error(node, new XamlParseException(message, node));
-        
+
         public IXamlAstNode ParseError(string message, IXamlAstNode offender, IXamlAstNode ret) =>
             Error(ret, new XamlParseException(message, offender));
 
@@ -47,12 +47,12 @@ namespace XamlX.Transform
                 _context = context;
                 _transformer = transformer;
             }
-            
+
             public IXamlAstNode Visit(IXamlAstNode node)
             {
-                #if Xaml_DEBUG
+#if Xaml_DEBUG
                 return _transformer.Transform(_context, node);
-                #else
+#else
                 try
                 {
                     return _transformer.Transform(_context, node);
@@ -62,14 +62,14 @@ namespace XamlX.Transform
                     throw new XamlParseException(
                         "Internal compiler error while transforming node " + node + ":\n" + e, node);
                 }
-                #endif
+#endif
             }
 
             public void Push(IXamlAstNode node) => _context.PushParent(node);
 
             public void Pop() => _context.PopParent();
         }
-        
+
         public IXamlAstNode Visit(IXamlAstNode root, IXamlAstTransformer transformer)
         {
             root = root.Visit(new Visitor(this, transformer));

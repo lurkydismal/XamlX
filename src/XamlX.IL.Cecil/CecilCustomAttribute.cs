@@ -5,10 +5,10 @@ using Mono.Cecil;
 namespace XamlX.TypeSystem
 {
     partial class CecilTypeSystem
-    {       
+    {
         class CecilCustomAttribute : IXamlCustomAttribute
         {
-            
+
             public CecilTypeSystem TypeSystem { get; }
             public CustomAttribute Data { get; }
 

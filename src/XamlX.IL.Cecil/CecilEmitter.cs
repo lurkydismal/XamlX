@@ -37,7 +37,7 @@ namespace XamlX.TypeSystem
                 rv.FieldType = Import(rv.FieldType);
                 return rv;
             }
-            
+
             private static Dictionary<SreOpCode, OpCode> Dic = new Dictionary<SreOpCode, OpCode>();
             private List<CecilLabel> _markedLabels = new List<CecilLabel>();
             static CecilEmitter()
@@ -45,19 +45,19 @@ namespace XamlX.TypeSystem
 
                 foreach (var sreField in typeof(SreOpCodes)
                     .GetFields(BindingFlags.Static | BindingFlags.Public)
-                    .Where(f=>f.FieldType == typeof(SreOpCode)))
+                    .Where(f => f.FieldType == typeof(SreOpCode)))
 
                 {
-                    var sre = (SreOpCode) sreField.GetValue(null);
+                    var sre = (SreOpCode)sreField.GetValue(null);
                     var cecilField = typeof(OpCodes).GetField(sreField.Name);
-                    if(cecilField == null)
+                    if (cecilField == null)
                         continue;
                     var cecil = (OpCode)cecilField.GetValue(null);
                     Dic[sre] = cecil;
-                }       
+                }
             }
-            
-            
+
+
             private readonly MethodBody _body;
             private readonly MethodDefinition _method;
             private CecilDebugPoint _pendingDebugPoint;
@@ -115,14 +115,14 @@ namespace XamlX.TypeSystem
 
             public IXamlILEmitter Emit(SreOpCode code, IXamlField field)
             {
-                return Emit(Instruction.Create(Dic[code], Import(((CecilField) field).Field)));
+                return Emit(Instruction.Create(Dic[code], Import(((CecilField)field).Field)));
             }
 
             public IXamlILEmitter Emit(SreOpCode code, IXamlMethod method)
-                => Emit(Instruction.Create(Dic[code], M.ImportReference(((CecilMethod) method).IlReference)));
+                => Emit(Instruction.Create(Dic[code], M.ImportReference(((CecilMethod)method).IlReference)));
 
             public IXamlILEmitter Emit(SreOpCode code, IXamlConstructor ctor)
-                => Emit(Instruction.Create(Dic[code], M.ImportReference(((CecilConstructor) ctor).IlReference)));
+                => Emit(Instruction.Create(Dic[code], M.ImportReference(((CecilConstructor)ctor).IlReference)));
 
             public IXamlILEmitter Emit(SreOpCode code, string arg)
                 => Emit(Instruction.Create(Dic[code], arg));
@@ -134,7 +134,7 @@ namespace XamlX.TypeSystem
                 => Emit(Instruction.Create(Dic[code], arg));
 
             public IXamlILEmitter Emit(SreOpCode code, IXamlType type)
-                => Emit(Instruction.Create(Dic[code], Import(((ITypeReference) type).Reference)));
+                => Emit(Instruction.Create(Dic[code], Import(((ITypeReference)type).Reference)));
 
             public IXamlILEmitter Emit(SreOpCode code, float arg)
                 => Emit(Instruction.Create(Dic[code], arg));
@@ -169,7 +169,7 @@ namespace XamlX.TypeSystem
                     if (_target != null)
                         throw new InvalidOperationException();
                     _target = i;
-                    if(_pendingConsumers != null)
+                    if (_pendingConsumers != null)
                         foreach (var c in _pendingConsumers)
                             c.Operand = i;
                     _pendingConsumers = null;
@@ -178,17 +178,17 @@ namespace XamlX.TypeSystem
 
             public IXamlLocal DefineLocal(IXamlType type)
             {
-                var r = Import(((ITypeReference) type).Reference);
+                var r = Import(((ITypeReference)type).Reference);
                 var def = new VariableDefinition(r);
                 _body.Variables.Add(def);
-                return new CecilLocal {Variable = def};
+                return new CecilLocal { Variable = def };
             }
 
             public IXamlLabel DefineLabel() => new CecilLabel();
 
             public IXamlILEmitter MarkLabel(IXamlLabel label)
             {
-                _markedLabels.Add((CecilLabel) label);
+                _markedLabels.Add((CecilLabel)label);
                 return this;
             }
 
@@ -196,11 +196,11 @@ namespace XamlX.TypeSystem
                 => Emit(((CecilLabel)label).CreateInstruction(Dic[code]));
 
             public IXamlILEmitter Emit(SreOpCode code, IXamlLocal local)
-                => Emit(Instruction.Create(Dic[code], ((CecilLocal) local).Variable));
+                => Emit(Instruction.Create(Dic[code], ((CecilLocal)local).Variable));
 
             private static readonly Guid LanguageGuid = new Guid("9a37fc74-96b5-4dbc-8b8a-c4e603735a63");
             private static readonly Guid LanguageVendorGuid = new Guid("3c631bf9-0cbe-4aab-a24a-5e417734441c");
-            
+
             class CecilDebugPoint
             {
                 private readonly CecilEmitter _parent;
@@ -222,7 +222,7 @@ namespace XamlX.TypeSystem
                     if (!_parent._method.DebugInformation.HasSequencePoints
                         && _parent._body.Instructions.Count != 0)
                         instruction = _parent._body.Instructions.First();
-                    
+
                     var dbg = _parent._method.DebugInformation;
                     if (dbg.Scope == null)
                     {
@@ -235,7 +235,7 @@ namespace XamlX.TypeSystem
 
                     var realLine = Line - 1;
                     var endColumn = Position;
-                    if (realLine<Document.Lines.Count)
+                    if (realLine < Document.Lines.Count)
                     {
                         var lineString = Document.Lines[realLine];
                         for (; endColumn < lineString.Length; endColumn++)
@@ -248,7 +248,7 @@ namespace XamlX.TypeSystem
                     }
 
                     endColumn++;
-                    
+
                     var sp = new SequencePoint(instruction, Document.Document)
                     {
                         StartLine = Line,
@@ -257,10 +257,10 @@ namespace XamlX.TypeSystem
                         EndColumn = endColumn
                     };
                     dbg.SequencePoints.Add(sp);
-                    
+
                 }
             }
-            
+
             static ConditionalWeakTable<AssemblyDefinition, Dictionary<string, DocumentHelper>>
                 _documents = new ConditionalWeakTable<AssemblyDefinition, Dictionary<string, DocumentHelper>>();
 
@@ -274,7 +274,7 @@ namespace XamlX.TypeSystem
                     byte[] hash;
                     using (var sha1 = SHA1.Create())
                         hash = sha1.ComputeHash(data);
-                    
+
                     Document = new Document(file.FilePath)
                     {
                         LanguageGuid = LanguageGuid,
@@ -289,12 +289,12 @@ namespace XamlX.TypeSystem
                         Lines.Add(l);
                 }
             }
-            
+
             public void InsertSequencePoint(IFileSource file, int line, int position)
             {
                 if (!_documents.TryGetValue(_method.Module.Assembly, out var documents))
                     _documents.Add(_method.Module.Assembly, documents = new Dictionary<string, DocumentHelper>());
-                
+
                 if (!documents.TryGetValue(file.FilePath, out var doc))
                 {
                     documents[file.FilePath] = doc = new DocumentHelper(file);

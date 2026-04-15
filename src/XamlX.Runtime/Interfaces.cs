@@ -13,7 +13,7 @@ namespace XamlX.Runtime
         public string ClrNamespace { get; set; }
         public string ClrAssemblyName { get; set; }
     }
-    
+
     public interface IXamlXmlNamespaceInfoProviderV1
     {
         IReadOnlyDictionary<string, IReadOnlyList<XamlXmlNamespaceInfoV1>> XmlNamespaces { get; }

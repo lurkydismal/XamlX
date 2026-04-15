@@ -23,7 +23,7 @@ namespace XamlX.IL.Emitters
             if (ctor == null)
                 throw new XamlLoadException("Unable to find default constructor and no non-default one is specified",
                     n);
-            
+
             for (var c = 0; c < n.Arguments.Count; c++)
             {
                 context.Emit(n.Arguments[c], codeGen, ctor.Parameters[c]);

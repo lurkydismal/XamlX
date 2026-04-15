@@ -43,9 +43,9 @@ namespace XamlX.Transform
         public IXamlType ParentStackProvider { get; set; }
         public IXamlType XmlNamespaceInfoProvider { get; set; }
         public IXamlType UriContextProvider { get; set; }
-        
+
         public IXamlCustomAttributeResolver CustomAttributeResolver { get; set; }
-        
+
         /// <summary>
         /// Expected signature:
         /// static IServiceProvider InnerServiceProviderFactory(IServiceProvider self);

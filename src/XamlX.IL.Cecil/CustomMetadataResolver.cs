@@ -3,7 +3,8 @@ using Mono.Cecil;
 
 namespace XamlX.TypeSystem
 {
-    partial class CecilTypeSystem {
+    partial class CecilTypeSystem
+    {
         public class CustomMetadataResolver : MetadataResolver
         {
             private readonly CecilTypeSystem _typeSystem;

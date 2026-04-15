@@ -34,12 +34,12 @@ namespace XamlX.TypeSystem
                 Local = null;
             }
         }
-        
+
         public XamlLocalsPool(Func<IXamlType, IXamlLocal> localFactory)
         {
             _localFactory = localFactory;
         }
-        
+
         public PooledLocal GetLocal(IXamlType type)
         {
             for (var c = 0; c < _localsPool.Count; c++)

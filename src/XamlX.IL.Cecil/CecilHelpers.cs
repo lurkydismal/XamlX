@@ -30,8 +30,8 @@ namespace XamlX.TypeSystem
                         for (var c = 0; c < gref.GenericArguments.Count; c++)
                         {
                             var arg = gref.GenericArguments[c];
-                             if (arg is GenericParameter genericParameter
-                                && CecilHelpers.Equals(genericParameter.DeclaringType, inst.ElementType))
+                            if (arg is GenericParameter genericParameter
+                               && CecilHelpers.Equals(genericParameter.DeclaringType, inst.ElementType))
                             {
                                 if (clone == null)
                                 {
@@ -63,7 +63,7 @@ namespace XamlX.TypeSystem
         public static bool Equals(TypeReference left, TypeReference right)
         {
             _depth++;
-            if(_depth>200)
+            if (_depth > 200)
                 throw new StackOverflowException();
             var res = EqualsCore(left, right);
             _depth--;
@@ -82,7 +82,7 @@ namespace XamlX.TypeSystem
                 left = left.Resolve();
             if (right.GetType() == typeof(TypeReference))
                 right = right.Resolve();
-            
+
             if (left.GetType() != right.GetType())
                 return false;
             // Direct
@@ -97,7 +97,7 @@ namespace XamlX.TypeSystem
             }
             if (left is GenericInstanceType leftGi && right is GenericInstanceType rightGi)
             {
-                for(var c=0; c<leftGi.GenericArguments.Count;c++)
+                for (var c = 0; c < leftGi.GenericArguments.Count; c++)
                     if (!Equals(leftGi.GenericArguments[c], rightGi.GenericArguments[c]))
                         return false;
                 return true;

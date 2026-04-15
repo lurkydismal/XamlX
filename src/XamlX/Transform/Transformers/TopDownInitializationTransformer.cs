@@ -47,12 +47,12 @@ namespace XamlX.Transform.Transformers
                     new XamlAstImperativeValueManipulation(initializer, local, initializer));
                 return true;
             }
-            
+
             if (node is XamlPropertyAssignmentNode assignment)
             {
                 if (!TryConvert(assignment.Values.Last(), out var nvalue, out var deferred))
                     return node;
-                
+
                 assignment.Values[assignment.Values.Count - 1] = nvalue;
                 return new XamlManipulationGroupNode(assignment)
                 {

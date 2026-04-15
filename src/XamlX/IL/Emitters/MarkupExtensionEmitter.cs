@@ -33,7 +33,7 @@ namespace XamlX.IL.Emitters
             }
 
             context.Emit(me.Value, ilgen, me.Value.Type.GetClrType());
-            
+
             if (me.ProvideValue.Parameters.Count > 0)
                 ilgen
                     .Emit(OpCodes.Ldloc, context.ContextLocal);

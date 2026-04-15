@@ -16,7 +16,7 @@ namespace XamlX.IL.Emitters
         List<IXamlPropertySetter> ValidateAndGetSetters(XamlPropertyAssignmentNode an)
         {
             var lst = an.PossibleSetters.Where(x => x.Parameters.Count == an.Values.Count).ToList();
-            if(an.Values.Count>1 && lst.Count>1)
+            if (an.Values.Count > 1 && lst.Count > 1)
                 for (var c = 0; c < an.Values.Count - 2; c++)
                 {
                     var failed = an.PossibleSetters.FirstOrDefault(x =>
@@ -33,7 +33,7 @@ namespace XamlX.IL.Emitters
                 throw new XamlLoadException("No setters found for property assignment", an);
             return lst;
         }
-        
+
         public XamlILNodeEmitResult Emit(IXamlAstNode node, XamlEmitContextWithLocals<IXamlILEmitter, XamlILNodeEmitResult> context, IXamlILEmitter codeGen)
         {
             if (!(node is XamlPropertyAssignmentNode an))
@@ -46,7 +46,7 @@ namespace XamlX.IL.Emitters
             }
 
             var value = an.Values.Last();
-            
+
             var isValueType = value.Type.GetClrType().IsValueType;
             // If there is only one available setter or if value is a value type, always use the first one
             if (setters.Count == 1 || isValueType)
@@ -62,11 +62,11 @@ namespace XamlX.IL.Emitters
                 IXamlLabel next = null;
                 var hadJumps = false;
                 context.Emit(value, codeGen, value.Type.GetClrType());
-                
+
                 foreach (var setter in setters)
                 {
                     var type = setter.Parameters.Last();
-                    
+
                     // We have already checked this type or its base type
                     if (checkedTypes.Any(ch => ch.IsAssignableFrom(type)))
                         continue;
@@ -103,7 +103,7 @@ namespace XamlX.IL.Emitters
 
                     if (checkNext)
                         hadJumps = true;
-                    
+
                     ILEmitHelpers.EmitConvert(context, codeGen, value, value.Type.GetClrType(), type);
                     context.Emit(setter, codeGen);
                     if (hadJumps)
@@ -111,7 +111,7 @@ namespace XamlX.IL.Emitters
                         codeGen.Br(exit);
                     }
 
-                    if(!checkNext)
+                    if (!checkNext)
                         break;
                 }
 

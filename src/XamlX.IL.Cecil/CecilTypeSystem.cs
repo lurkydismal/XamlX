@@ -10,18 +10,18 @@ using XamlX.IL;
 
 namespace XamlX.TypeSystem
 {
-    #if !XAMLX_CECIL_INTERNAL
+#if !XAMLX_CECIL_INTERNAL
     public
-    #endif
-    partial class CecilTypeSystem : IXamlTypeSystem,  IAssemblyResolver
+#endif
+    partial class CecilTypeSystem : IXamlTypeSystem, IAssemblyResolver
     {
         private List<CecilAssembly> _asms = new List<CecilAssembly>();
         private Dictionary<string, CecilAssembly> _assemblyCache = new Dictionary<string, CecilAssembly>();
         private Dictionary<TypeReference, IXamlType> _typeReferenceCache = new Dictionary<TypeReference, IXamlType>();
-        private Dictionary<AssemblyDefinition, CecilAssembly> _assemblyDic 
+        private Dictionary<AssemblyDefinition, CecilAssembly> _assemblyDic
             = new Dictionary<AssemblyDefinition, CecilAssembly>();
         private Dictionary<string, IXamlType> _unresolvedTypeCache = new Dictionary<string, IXamlType>();
-        
+
         private CustomMetadataResolver _resolver;
         private CecilTypeCache _typeCache;
         public void Dispose()
@@ -49,7 +49,7 @@ namespace XamlX.TypeSystem
         public CecilTypeSystem(IEnumerable<string> paths, string targetPath = null)
         {
             if (targetPath != null)
-                paths = paths.Concat(new[] {targetPath});
+                paths = paths.Concat(new[] { targetPath });
             _resolver = new CustomMetadataResolver(this);
             _typeCache = new CecilTypeCache(this);
             foreach (var path in paths.Distinct())
@@ -72,7 +72,7 @@ namespace XamlX.TypeSystem
                     TargetAssembly = wrapped;
                     TargetAssemblyDefinition = asm;
                 }
-            }    
+            }
         }
 
         public IXamlAssembly TargetAssembly { get; private set; }
@@ -91,7 +91,7 @@ namespace XamlX.TypeSystem
             return null;
         }
 
-        public IXamlType FindType(string name, string assembly) 
+        public IXamlType FindType(string name, string assembly)
             => FindAssembly(assembly)?.FindType(name);
 
 
@@ -103,7 +103,7 @@ namespace XamlX.TypeSystem
             _assemblyDic.TryGetValue(d, out var asm);
             return asm;
         }
-        
+
         IXamlType Resolve(TypeReference reference)
         {
             if (!_typeReferenceCache.TryGetValue(reference, out var rv))
@@ -116,7 +116,7 @@ namespace XamlX.TypeSystem
                 }
                 catch (AssemblyResolutionException)
                 {
-                    
+
                 }
 
                 if (resolved != null)
@@ -144,7 +144,7 @@ namespace XamlX.TypeSystem
             _assemblyDic[asm] = wrapped;
             return wrapped;
         }
-        
+
         public AssemblyDefinition CreateAndRegisterAssembly(string name, Version version, ModuleKind kind)
         {
             var def = AssemblyDefinition.CreateAssembly(new AssemblyNameDefinition(name, version), name,
@@ -176,6 +176,6 @@ namespace XamlX.TypeSystem
         }
 
         public AssemblyDefinition GetAssembly(IXamlAssembly asm)
-            => ((CecilAssembly) asm).Assembly;
+            => ((CecilAssembly)asm).Assembly;
     }
 }

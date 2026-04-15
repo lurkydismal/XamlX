@@ -19,12 +19,12 @@ namespace XamlX.Transform.Transformers
                         var vnodes = new List<IXamlAstValueNode>();
                         foreach (var ch in ni.Children)
                         {
-                            if(ch is IXamlAstValueNode vn)
+                            if (ch is IXamlAstValueNode vn)
                                 vnodes.Add(vn);
                             if (context.StrictMode)
                                 throw new XamlParseException(
                                     "Only value nodes are allowed as directive children elements", ch);
-                            
+
                         }
 
                         return new XamlAstXmlDirective(ni, type.XmlNamespace, type.Name, vnodes);

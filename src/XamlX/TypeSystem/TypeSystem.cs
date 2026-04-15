@@ -61,7 +61,7 @@ namespace XamlX.TypeSystem
     {
         string Name { get; }
     }
-    
+
 #if !XAMLX_INTERNAL
     public
 #endif
@@ -71,7 +71,7 @@ namespace XamlX.TypeSystem
         bool IsStatic { get; }
         IReadOnlyList<IXamlType> Parameters { get; }
     }
-    
+
 #if !XAMLX_INTERNAL
     public
 #endif
@@ -124,7 +124,7 @@ namespace XamlX.TypeSystem
         List<object> Parameters { get; }
         Dictionary<string, object> Properties { get; }
     }
-    
+
 #if !XAMLX_INTERNAL
     public
 #endif
@@ -135,7 +135,7 @@ namespace XamlX.TypeSystem
         IXamlType FindType(string name);
         IXamlType FindType(string name, string assembly);
     }
-    
+
 #if !XAMLX_INTERNAL
     public
 #endif
@@ -150,15 +150,15 @@ namespace XamlX.TypeSystem
 #endif
     interface IXamlLocal
     {
-        
+
     }
-    
+
 #if !XAMLX_INTERNAL
     public
 #endif
     interface IXamlLabel
     {
-        
+
     }
 
 #if !XAMLX_INTERNAL
@@ -202,7 +202,7 @@ namespace XamlX.TypeSystem
     {
         public bool IsClass { get; set; }
     }
-    
+
 #if !XAMLX_INTERNAL
     public
 #endif
@@ -252,7 +252,7 @@ namespace XamlX.TypeSystem
         public static XamlPseudoType Unresolved(string message) =>
             new XamlPseudoType($"{{Unresolved type: '{message}'}}");
     }
-    
+
 #if !XAMLX_INTERNAL
     public
 #endif
@@ -278,7 +278,7 @@ namespace XamlX.TypeSystem
                 $"{(IsStatic ? "static" : "instance")} {ReturnType.GetFullName()} {Name} ({string.Join(", ", Parameters.Select(p => p.GetFullName()))}) (exact match: {IsExactMatch}, declaring only: {DeclaringOnly})";
         }
     }
-    
+
 #if !XAMLX_INTERNAL
     public
 #endif
@@ -295,7 +295,7 @@ namespace XamlX.TypeSystem
                 name += "," + type.Assembly.Name;
             return name;
         }
-        
+
         public static IXamlType GetType(this IXamlTypeSystem sys, string type)
         {
             var f = sys.FindType(type);
@@ -303,20 +303,20 @@ namespace XamlX.TypeSystem
                 throw new XamlTypeSystemException("Unable to resolve type " + type);
             return f;
         }
-        
+
         public static IEnumerable<IXamlMethod> FindMethods(this IXamlType type, Func<IXamlMethod, bool> criteria)
         {
             foreach (var m in type.Methods)
                 if (criteria(m))
                     yield return m;
             var bt = type.BaseType;
-            if(bt!=null)
+            if (bt != null)
                 foreach (var bm in bt.FindMethods(criteria))
                     yield return bm;
-            foreach(var iface in type.Interfaces)
-            foreach(var m in iface.Methods)
-                if (criteria(m))
-                    yield return m;
+            foreach (var iface in type.Interfaces)
+                foreach (var m in iface.Methods)
+                    if (criteria(m))
+                        yield return m;
         }
 
         public static IXamlMethod FindMethod(this IXamlType type, Func<IXamlMethod, bool> criteria)
@@ -327,14 +327,14 @@ namespace XamlX.TypeSystem
             var bres = type.BaseType?.FindMethod(criteria);
             if (bres != null)
                 return bres;
-            foreach(var iface in type.Interfaces)
-                foreach(var m in iface.Methods)
+            foreach (var iface in type.Interfaces)
+                foreach (var m in iface.Methods)
                     if (criteria(m))
                         return m;
             return null;
         }
-        
-        public static IXamlMethod FindMethod(this IXamlType type, string name, IXamlType returnType, 
+
+        public static IXamlMethod FindMethod(this IXamlType type, string name, IXamlType returnType,
             bool allowDowncast, params IXamlType[] args)
         {
             foreach (var m in type.Methods)
@@ -348,7 +348,7 @@ namespace XamlX.TypeSystem
                             mismatch = !m.Parameters[c].IsAssignableFrom(args[c]);
                         else
                             mismatch = !m.Parameters[c].Equals(args[c]);
-                        if(mismatch)
+                        if (mismatch)
                             break;
                     }
 
@@ -373,8 +373,8 @@ namespace XamlX.TypeSystem
         {
             foreach (var m in type.Methods)
             {
-                if (m.Name == signature.Name 
-                    && m.ReturnType.Equals(signature.ReturnType) 
+                if (m.Name == signature.Name
+                    && m.ReturnType.Equals(signature.ReturnType)
                     && m.Parameters.Count == signature.Parameters.Count
                     && m.IsStatic == signature.IsStatic
                     )
@@ -386,7 +386,7 @@ namespace XamlX.TypeSystem
                             mismatch = !m.Parameters[c].IsAssignableFrom(signature.Parameters[c]);
                         else
                             mismatch = !m.Parameters[c].Equals(signature.Parameters[c]);
-                        if(mismatch)
+                        if (mismatch)
                             break;
                     }
 
@@ -399,7 +399,7 @@ namespace XamlX.TypeSystem
                 return FindMethod(type.BaseType, signature);
             return null;
         }
-        
+
         public static IXamlConstructor GetConstructor(this IXamlType type, List<IXamlType> args = null)
         {
             var found = FindConstructor(type, args);
@@ -408,18 +408,18 @@ namespace XamlX.TypeSystem
                 if (args != null && args.Count > 0)
                 {
                     var argsString = string.Join(", ", args.Select(a => a.GetFullName()));
-                    
+
                     throw new XamlTypeSystemException($"Constructor with arguments {argsString} is not found on type {type.GetFqn()}");
                 }
-                
+
                 throw new XamlTypeSystemException($"Constructor with no arguments is not found on type {type.GetFqn()}");
             }
             return found;
         }
-        
+
         public static IXamlConstructor FindConstructor(this IXamlType type, List<IXamlType> args = null)
         {
-            if(args == null)
+            if (args == null)
                 args = new List<IXamlType>();
             foreach (var ctor in type.Constructors.Where(c => c.IsPublic
                                                               && !c.IsStatic
@@ -429,7 +429,7 @@ namespace XamlX.TypeSystem
                 for (var c = 0; c < args.Count; c++)
                 {
                     mismatch = !ctor.Parameters[c].IsAssignableFrom(args[c]);
-                    if(mismatch)
+                    if (mismatch)
                         break;
                 }
 
@@ -459,7 +459,7 @@ namespace XamlX.TypeSystem
         {
             foreach (var i in type.Interfaces)
                 yield return i;
-            if(type.BaseType!=null)
+            if (type.BaseType != null)
                 foreach (var i in type.BaseType.GetAllInterfaces())
                     yield return i;
         }
@@ -468,7 +468,7 @@ namespace XamlX.TypeSystem
         {
             foreach (var p in t.Properties)
                 yield return p;
-            if(t.BaseType!=null)
+            if (t.BaseType != null)
                 foreach (var p in t.BaseType.GetAllProperties())
                     yield return p;
         }
@@ -486,7 +486,7 @@ namespace XamlX.TypeSystem
         {
             foreach (var p in t.Events)
                 yield return p;
-            if(t.BaseType!=null)
+            if (t.BaseType != null)
                 foreach (var p in t.BaseType.GetAllEvents())
                     yield return p;
         }
@@ -510,5 +510,5 @@ namespace XamlX.TypeSystem
             return lst;
         }
     }
-    
+
 }

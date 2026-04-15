@@ -57,7 +57,7 @@ namespace XamlX.IL
             });
             local?.Dispose();
         }
-        
+
         public static void EmitConvert(XamlEmitContextWithLocals<IXamlILEmitter, XamlILNodeEmitResult> context, IXamlLineInfo node, IXamlType what,
             IXamlType to, Func<bool, IXamlILEmitter> ld)
         {
@@ -65,7 +65,7 @@ namespace XamlX.IL
                 ld(false);
             else if (what == XamlPseudoType.Null)
             {
-                
+
                 if (to.IsValueType)
                 {
                     if (to.GenericTypeDefinition?.Equals(context.Configuration.WellKnownTypes.NullableT) == true)
@@ -108,7 +108,7 @@ namespace XamlX.IL
                         node);
                 ld(false).Box(what);
             }
-            else if(to.IsValueType && !what.IsValueType)
+            else if (to.IsValueType && !what.IsValueType)
             {
                 if (!(what.Namespace == "System" && what.Name == "Object"))
                     throw new XamlLoadException(

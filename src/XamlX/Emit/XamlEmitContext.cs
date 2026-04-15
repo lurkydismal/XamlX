@@ -279,7 +279,7 @@ namespace XamlX.Emit
     public
 #endif
     interface IXamlEmitableWrappedMethod<TBackendEmitter, TEmitResult> : IXamlWrappedMethod
-        where TEmitResult: IXamlEmitResult
+        where TEmitResult : IXamlEmitResult
     {
         void Emit(XamlEmitContext<TBackendEmitter, TEmitResult> context, TBackendEmitter emitter, bool swallowResult);
     }

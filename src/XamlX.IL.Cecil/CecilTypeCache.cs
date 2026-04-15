@@ -10,7 +10,7 @@ namespace XamlX.TypeSystem
         class CecilTypeCache
         {
             public CecilTypeSystem TypeSystem { get; }
-            
+
             Dictionary<TypeDefinition, DefinitionEntry> _definitions = new Dictionary<TypeDefinition, DefinitionEntry>();
 
             public CecilTypeCache(CecilTypeSystem typeSystem)
@@ -23,9 +23,9 @@ namespace XamlX.TypeSystem
                 public CecilType Direct { get; set; }
                 public Dictionary<Type, List<CecilType>> References { get; } = new Dictionary<Type, List<CecilType>>();
             }
-            
-            
-            
+
+
+
             public CecilType Get(TypeReference reference)
             {
                 if (reference.GetType() == typeof(TypeReference))

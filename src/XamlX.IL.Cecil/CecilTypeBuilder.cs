@@ -12,15 +12,15 @@ namespace XamlX.TypeSystem
         class CecilTypeBuilder : CecilType, IXamlTypeBuilder<IXamlILEmitter>
         {
             protected TypeReference SelfReference;
-            public CecilTypeBuilder(CecilTypeSystem typeSystem, CecilAssembly assembly, TypeDefinition definition) 
+            public CecilTypeBuilder(CecilTypeSystem typeSystem, CecilAssembly assembly, TypeDefinition definition)
                 : base(typeSystem, assembly, definition)
             {
                 SelfReference = definition;
             }
 
             TypeReference GetReference(IXamlType type) =>
-                Definition.Module.ImportReference(((ITypeReference) type).Reference);
-            
+                Definition.Module.ImportReference(((ITypeReference)type).Reference);
+
             public IXamlField DefineField(IXamlType type, string name, bool isPublic, bool isStatic)
             {
                 var r = GetReference(type);
@@ -54,24 +54,24 @@ namespace XamlX.TypeSystem
 
                 if (isInterfaceImpl)
                     attrs |= MethodAttributes.NewSlot | MethodAttributes.Virtual;
-                               
+
                 var def = new MethodDefinition(name, attrs, GetReference(returnType));
-                if(args!=null)
+                if (args != null)
                     foreach (var a in args)
                         def.Parameters.Add(new ParameterDefinition(GetReference(a)));
                 if (overrideMethod != null)
-                    def.Overrides.Add(Definition.Module.ImportReference(((CecilMethod) overrideMethod).Reference));
+                    def.Overrides.Add(Definition.Module.ImportReference(((CecilMethod)overrideMethod).Reference));
                 def.Body.InitLocals = true;
                 Definition.Methods.Add(def);
                 var rv = new CecilMethod(TypeSystem, def, SelfReference);
                 ((List<CecilMethod>)Methods).Add(rv);
                 return rv;
             }
-            
+
             public IXamlProperty DefineProperty(IXamlType propertyType, string name, IXamlMethod setter, IXamlMethod getter)
             {
-                var s = (CecilMethod) setter;
-                var g = (CecilMethod) getter;
+                var s = (CecilMethod)setter;
+                var g = (CecilMethod)getter;
                 var def = new PropertyDefinition(name, PropertyAttributes.None,
                     GetReference(propertyType));
                 def.SetMethod = s?.Definition;
@@ -93,7 +93,7 @@ namespace XamlX.TypeSystem
 
                 var def = new MethodDefinition(isStatic ? ".cctor" : ".ctor", attrs,
                     Definition.Module.TypeSystem.Void);
-                if(args!=null)
+                if (args != null)
                     foreach (var a in args)
                         def.Parameters.Add(new ParameterDefinition(GetReference(a)));
                 def.Body.InitLocals = true;
@@ -111,7 +111,7 @@ namespace XamlX.TypeSystem
                     isPublic ? TypeAttributes.NestedPublic : TypeAttributes.NestedPrivate, GetReference(baseType));
 
                 Definition.NestedTypes.Add(td);
-                return new CecilTypeBuilder(TypeSystem, (CecilAssembly) Assembly, td);
+                return new CecilTypeBuilder(TypeSystem, (CecilAssembly)Assembly, td);
             }
 
             public void DefineGenericParameters(IReadOnlyList<KeyValuePair<string, XamlGenericParameterConstraint>> args)

@@ -29,19 +29,19 @@ namespace XamlX.IL
                 .Ret();
 
             var infoType = method.ReturnType.GenericArguments[1].GenericArguments[0];
-            
+
             var ctor = typeBuilder.DefineConstructor(false);
             var listType = configuration.TypeSystem.FindType("System.Collections.Generic.List`1")
                 .MakeGenericType(infoType);
             var listInterfaceType = configuration.TypeSystem.FindType("System.Collections.Generic.IReadOnlyList`1")
                 .MakeGenericType(infoType);
             var listAdd = listType.FindMethod("Add", configuration.WellKnownTypes.Void, true, infoType);
-            
+
             var dictionaryType = configuration.TypeSystem.FindType("System.Collections.Generic.Dictionary`2")
                 .MakeGenericType(configuration.WellKnownTypes.String, listInterfaceType);
             var dictionaryAdd = dictionaryType.FindMethod("Add", configuration.WellKnownTypes.Void, true,
                 configuration.WellKnownTypes.String, listInterfaceType);
-            
+
             var dicLocal = ctor.Generator.DefineLocal(dictionaryType);
             var listLocal = ctor.Generator.DefineLocal(listType);
 
@@ -53,7 +53,7 @@ namespace XamlX.IL
                 .Ldarg_0()
                 .Ldloc(dicLocal)
                 .Stfld(instField);
-            
+
             foreach (var alias in document.NamespaceAliases)
             {
                 ctor.Generator

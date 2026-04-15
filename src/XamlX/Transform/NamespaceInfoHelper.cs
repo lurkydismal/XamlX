@@ -18,7 +18,7 @@ namespace XamlX.Transform
             public IXamlAssembly Assembly { get; set; }
             public string AssemblyName { get; set; }
         }
-        
+
         public static List<NamespaceResolveResult> TryResolve(TransformerConfiguration config, string xmlns)
         {
             if (config.XmlnsMappings.Namespaces.TryGetValue(xmlns, out var lst))
@@ -31,13 +31,13 @@ namespace XamlX.Transform
             }
 
             var prefixStringComparison = StringComparison.Ordinal;
-            
+
             const string clrNamespace = "clr-namespace:";
             const string assemblyNamePrefix = ";assembly=";
             if (xmlns.StartsWith(clrNamespace, prefixStringComparison))
             {
                 var ns = xmlns.Substring(clrNamespace.Length);
-                
+
                 var indexOfAssemblyPrefix = ns.IndexOf(assemblyNamePrefix, prefixStringComparison);
                 string asm = config.DefaultAssembly?.Name;
                 if (indexOfAssemblyPrefix != -1)

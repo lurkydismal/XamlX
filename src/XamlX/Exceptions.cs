@@ -16,7 +16,7 @@ namespace XamlX
 
         public XamlParseException(string message, IXamlLineInfo lineInfo) : this(message, lineInfo.Line, lineInfo.Position)
         {
-            
+
         }
     }
 
@@ -49,7 +49,7 @@ namespace XamlX
     {
         public XamlTypeSystemException(string message) : base(message)
         {
-            
+
         }
     }
 }

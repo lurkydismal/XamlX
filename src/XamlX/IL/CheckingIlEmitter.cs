@@ -19,15 +19,15 @@ namespace XamlX.IL
 
         private Dictionary<IXamlLabel, Instruction> _labels =
             new Dictionary<IXamlLabel, Instruction>();
-        
+
         private List<IXamlLabel> _labelsToMarkOnNextInstruction = new List<IXamlLabel>();
         private bool _paused;
 
         public CheckingILEmitter(IXamlILEmitter inner)
         {
             _inner = inner;
-        }        
-        
+        }
+
         class Instruction
         {
             public int Offset { get; }
@@ -100,7 +100,7 @@ namespace XamlX.IL
         {
             return GetInstructionPopBalance(code, operand) + GetInstructionPushBalance(code, operand);
         }
-        
+
         static int Balance(StackBehaviour op)
         {
             if (s_balance.TryGetValue(op, out var balance))
@@ -108,7 +108,7 @@ namespace XamlX.IL
             else
                 throw new Exception("Don't know how to track stack for " + op);
         }
-        
+
         static int GetInstructionPopBalance(OpCode code, object operand)
         {
             var method = operand as IXamlMethod;
@@ -118,10 +118,10 @@ namespace XamlX.IL
             {
                 stackBalance -= method.Parameters.Count + (method.IsStatic ? 0 : 1);
             }
-            else if (ctor!= null && (code == OpCodes.Call  || code == OpCodes.Newobj))
+            else if (ctor != null && (code == OpCodes.Call || code == OpCodes.Newobj))
             {
                 stackBalance -= ctor.Parameters.Count;
-                if(code != OpCodes.Newobj)
+                if (code != OpCodes.Newobj)
                 {
                     if (!ctor.IsStatic)
                         // base ctor pops this from the stack
@@ -135,7 +135,7 @@ namespace XamlX.IL
 
             return stackBalance;
         }
-        
+
         static int GetInstructionPushBalance(OpCode code, object operand)
         {
             var method = operand as IXamlMethod;
@@ -146,7 +146,7 @@ namespace XamlX.IL
                 if (method.ReturnType.FullName != "System.Void")
                     stackBalance += 1;
             }
-            else if (ctor!= null && (code == OpCodes.Call  || code == OpCodes.Newobj))
+            else if (ctor != null && (code == OpCodes.Call || code == OpCodes.Newobj))
             {
                 if (code == OpCodes.Newobj)
                     // New pushes a value to the stack
@@ -159,7 +159,7 @@ namespace XamlX.IL
 
             return stackBalance;
         }
-        
+
         public void Pause()
         {
             _paused = true;
@@ -177,7 +177,7 @@ namespace XamlX.IL
             _instructions.Add(new Instruction(_instructions.Count, change));
             (_inner as CheckingILEmitter)?.ExplicitStack(change);
         }
-        
+
         void Track(OpCode code, object operand)
         {
             if (_paused)
@@ -188,7 +188,7 @@ namespace XamlX.IL
                 _labels[l] = op;
             _labelsToMarkOnNextInstruction.Clear();
         }
-        
+
         public IXamlILEmitter Emit(OpCode code)
         {
             Track(code, null);
@@ -313,7 +313,7 @@ namespace XamlX.IL
             }
 
             var reserve = expectedBalance < 0 ? expectedBalance : 0;
-            
+
             var toInspect = new Stack<int>();
             toInspect.Push(0);
             _instructions[0].ExpectedBalance = 0;
@@ -322,11 +322,11 @@ namespace XamlX.IL
                 || _instructions.Last().Opcode != OpCodes.Nop
                 || _instructions.Last().BalanceChange != 0)
                 Track(OpCodes.Nop, null);
-            
-            foreach(var i in _instructions)
+
+            foreach (var i in _instructions)
                 if (i.JumpToLabel != null)
                     i.JumpToInstruction = _labels[i.JumpToLabel];
-            
+
             int? returnBalance = null;
             while (toInspect.Count > 0)
             {
@@ -341,16 +341,16 @@ namespace XamlX.IL
 
                     if (currentBalance + GetInstructionPopBalance(op.Opcode, op.Operand) < reserve)
                         return $"Stack underflow at {op}";
-                    
+
                     currentBalance += op.BalanceChange;
-                    
+
                     var control = op.Opcode.FlowControl;
                     if (control == FlowControl.Return)
                     {
                         if (!expectReturn)
                             return "Return flow control is not allowed for this emitter";
                         if (returnBalance.HasValue && currentBalance != returnBalance)
-                            return 
+                            return
                                 $"Already have a return with different stack balance {returnBalance}, current stack balance is {currentBalance}";
                         returnBalance = currentBalance;
                         if (currentBalance != expectedBalance)
@@ -362,7 +362,7 @@ namespace XamlX.IL
                     {
                         var jump = _labels[op.JumpToLabel];
                         if (jump.ExpectedBalance.HasValue && jump.ExpectedBalance != currentBalance)
-                            return 
+                            return
                                 $"Already have been at instruction offset {jump.Offset} ({jump.Opcode}) with stack balance {jump.ExpectedBalance}, stack balance at jump from {op.Offset} is {currentBalance}";
 
                         if (jump.ExpectedBalance == null)
@@ -371,14 +371,14 @@ namespace XamlX.IL
                             toInspect.Push(jump.Offset);
                         }
                     }
-                    
+
                     if (control == FlowControl.Break || control == FlowControl.Throw || control == FlowControl.Branch)
                         break;
 
                     ip++;
                 }
             }
-            
+
             var finalBalance = _instructions.Last().ExpectedBalance;
             if (finalBalance.HasValue && expectReturn)
                 return "Expected return, but control reaches the end of IL block";
